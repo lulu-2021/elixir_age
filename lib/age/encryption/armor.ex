@@ -28,11 +28,17 @@ defmodule ElixirAge.Encryption.Armor do
   Decode PEM armor format to binary age file.
   """
   def decode(pem_str) when is_binary(pem_str) do
-    case String.split(pem_str, ["\n"], parts: :trailing) do
-      [^@pem_begin | lines] ->
-        # Remove trailing newline and final end line
-        lines = Enum.drop(lines, -2)
-        b64 = Enum.join(lines, "")
+    lines = String.split(pem_str, "\n")
+
+    case lines do
+      [@pem_begin | rest] ->
+        # Remove the end marker line
+        rest =
+          rest
+          |> Enum.reject(&(&1 == @pem_end))
+          |> Enum.reject(&(&1 == ""))
+
+        b64 = Enum.join(rest, "")
 
         case Base.decode64(b64, padding: true) do
           {:ok, binary} -> {:ok, binary}
