@@ -1,0 +1,34 @@
+# Elixir
+/_build/
+/cover/
+/deps/
+/doc/
+.dialyzer_plt
+.dialyzer_plt.hash
+erl_crash.dump
+*.beam
+*.ez
+
+# IDEs
+.elixir_ls/
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS
+*.log
+*.pot
+
+# Dependencies
+ebin/
+rel/example_project
+
+# Environment
+.env
+.env.local
+
+# Build artifacts
+mix.lock
