@@ -46,12 +46,12 @@ defmodule ElixirAge.Identity do
     end
   end
 
-  defp parse_age_identity(str) do
+  defp parse_age_identity(_str) do
     # TODO: Implement age identity parsing
     {:ok, %X25519{}}
   end
 
-  defp parse_ssh_identity(str) do
+  defp parse_ssh_identity(_str) do
     # TODO: Implement SSH identity parsing
     {:ok, %SSH{}}
   end

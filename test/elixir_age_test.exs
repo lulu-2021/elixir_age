@@ -91,6 +91,10 @@ defmodule ElixirAgeTest do
       {:ok, decoded} = ElixirAge.Encryption.Armor.decode(armored)
       assert decoded == data
     end
+
+    test "decode returns error for invalid armor" do
+      {:error, _msg} = ElixirAge.Encryption.Armor.decode("invalid armor data")
+    end
   end
 
   describe "Core format" do

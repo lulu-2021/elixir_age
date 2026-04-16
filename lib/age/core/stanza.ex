@@ -28,7 +28,7 @@ defmodule ElixirAge.Core.Stanza do
   @doc """
   Encode stanza to binary format.
   """
-  def encode(%__MODULE__{} = stanza) do
+  def encode(%__MODULE__{} = _stanza) do
     # TODO: Implement stanza encoding
     {:ok, ""}
   end

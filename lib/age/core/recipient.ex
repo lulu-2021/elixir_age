@@ -48,12 +48,12 @@ defmodule ElixirAge.Core.Recipient do
     end
   end
 
-  defp parse_age_recipient(str) do
+  defp parse_age_recipient(_str) do
     # TODO: Implement age recipient parsing
     {:ok, %X25519{}}
   end
 
-  defp parse_ssh_recipient(str) do
+  defp parse_ssh_recipient(_str) do
     # TODO: Implement SSH recipient parsing
     {:ok, %SSH{}}
   end

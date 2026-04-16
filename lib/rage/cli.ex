@@ -15,12 +15,12 @@ defmodule ElixirAge.CLI do
     |> handle_result()
   end
 
-  defp parse_args(args) do
+  defp parse_args(_args) do
     # TODO: Implement argument parsing with OptionParser
     {:ok, :command, []}
   end
 
-  defp execute({:ok, cmd, opts}) do
+  defp execute({:ok, _cmd, _opts}) do
     # TODO: Create ElixirAge.CLI.Command module
     {:ok, "Command executed"}
   end

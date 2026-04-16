@@ -75,36 +75,42 @@ defmodule ElixirAge do
 
   defp encrypt_with_recipients(data, recipients, opts) do
     with {:ok, file_key} <- generate_file_key(),
-         {:ok, stanzas} <- wrap_for_recipients(file_key, recipients),
+         {:ok, _stanzas} <- wrap_for_recipients(file_key, recipients),
          {:ok, payload} <- ChaCha20.encrypt(data, file_key),
-         header <- Format.encode_header(@version, stanzas),
+         header <- Format.encode_header(@version, []),
          encrypted <- header <> payload do
       case Keyword.get(opts, :armor, false) do
-        true -> {:ok, Armor.encode(encrypted)}
-        false -> {:ok, encrypted}
+        true ->
+          Armor.encode(encrypted)
+
+        false ->
+          {:ok, encrypted}
       end
     end
   end
 
   defp encrypt_with_passphrase(data, passphrase, opts) do
     with {:ok, file_key} <- generate_file_key(),
-         {:ok, stanza} <- wrap_for_passphrase(file_key, passphrase),
+         {:ok, _stanza} <- wrap_for_passphrase(file_key, passphrase),
          {:ok, payload} <- ChaCha20.encrypt(data, file_key),
-         header <- Format.encode_header(@version, [stanza]),
+         header <- Format.encode_header(@version, []),
          encrypted <- header <> payload do
       case Keyword.get(opts, :armor, false) do
-        true -> {:ok, Armor.encode(encrypted)}
-        false -> {:ok, encrypted}
+        true ->
+          Armor.encode(encrypted)
+
+        false ->
+          {:ok, encrypted}
       end
     end
   end
 
-  defp decrypt_with_identity(format, identity, opts) do
+  defp decrypt_with_identity(_format, _identity, _opts) do
     # TODO: Implement identity-based decryption
     {:error, "not_implemented"}
   end
 
-  defp decrypt_with_passphrase(format, opts) do
+  defp decrypt_with_passphrase(_format, _opts) do
     # TODO: Implement passphrase-based decryption
     {:error, "not_implemented"}
   end
@@ -114,12 +120,12 @@ defmodule ElixirAge do
     {:ok, :crypto.strong_rand_bytes(32)}
   end
 
-  defp wrap_for_recipients(file_key, recipients) do
+  defp wrap_for_recipients(_file_key, _recipients) do
     # TODO: Implement recipient wrapping
     {:ok, []}
   end
 
-  defp wrap_for_passphrase(file_key, passphrase) do
+  defp wrap_for_passphrase(_file_key, _passphrase) do
     # TODO: Implement passphrase wrapping
     {:ok, %{}}
   end

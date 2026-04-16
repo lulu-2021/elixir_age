@@ -7,7 +7,7 @@ defmodule ElixirAge.Core.Format do
   """
 
   @age_magic "age-encryption.org/v1\n"
-  @age_magic_bytes byte_size(@age_magic)
+  # @age_magic_bytes byte_size(@age_magic)
 
   @doc """
   Parse an age file.

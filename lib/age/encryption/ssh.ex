@@ -31,7 +31,7 @@ defmodule ElixirAge.Encryption.SSH do
   @doc """
   Wrap a file key for an SSH recipient.
   """
-  def wrap_file_key(file_key, ssh_public_key) do
+  def wrap_file_key(_file_key, _ssh_public_key) do
     # TODO: Implement SSH file key wrapping
     {:ok, :crypto.strong_rand_bytes(32)}
   end
@@ -39,7 +39,7 @@ defmodule ElixirAge.Encryption.SSH do
   @doc """
   Unwrap a file key using an SSH private key.
   """
-  def unwrap_file_key(stanza_payload, ssh_private_key) do
+  def unwrap_file_key(_stanza_payload, _ssh_private_key) do
     # TODO: Implement SSH file key unwrapping
     {:ok, :crypto.strong_rand_bytes(32)}
   end

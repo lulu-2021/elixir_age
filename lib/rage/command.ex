@@ -14,17 +14,17 @@ defmodule ElixirAge.CLI.Command do
   @doc """
   Execute a parsed command.
   """
-  def execute({:encrypt, opts}) do
+  def execute({:encrypt, _opts}) do
     # TODO: Implement encrypt command execution
     {:ok, "encrypted"}
   end
 
-  def execute({:decrypt, opts}) do
+  def execute({:decrypt, _opts}) do
     # TODO: Implement decrypt command execution
     {:ok, "decrypted"}
   end
 
-  def execute({:keygen, opts}) do
+  def execute({:keygen, _opts}) do
     # TODO: Implement keygen command execution
     {:ok, "key generated"}
   end

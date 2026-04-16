@@ -8,7 +8,7 @@ defmodule ElixirAge.Plugin.Protocol do
   @doc """
   Initialize plugin state machine.
   """
-  def init(plugin_name) do
+  def init(_plugin_name) do
     # TODO: Implement plugin initialization
     {:ok, :not_implemented}
   end
@@ -16,7 +16,7 @@ defmodule ElixirAge.Plugin.Protocol do
   @doc """
   Add recipient to plugin state.
   """
-  def add_recipient(state, plugin_name, recipient_bytes) do
+  def add_recipient(state, _plugin_name, _recipient_bytes) do
     # TODO: Implement add recipient
     {:ok, state}
   end
@@ -24,7 +24,7 @@ defmodule ElixirAge.Plugin.Protocol do
   @doc """
   Add identity to plugin state.
   """
-  def add_identity(state, plugin_name, identity_bytes) do
+  def add_identity(state, _plugin_name, _identity_bytes) do
     # TODO: Implement add identity
     {:ok, state}
   end
@@ -32,7 +32,7 @@ defmodule ElixirAge.Plugin.Protocol do
   @doc """
   Wrap file keys with plugin.
   """
-  def wrap_file_keys(state, file_keys) do
+  def wrap_file_keys(_state, _file_keys) do
     # TODO: Implement file key wrapping
     {:ok, []}
   end
@@ -40,7 +40,7 @@ defmodule ElixirAge.Plugin.Protocol do
   @doc """
   Unwrap file keys with plugin.
   """
-  def unwrap_file_keys(state, stanzas) do
+  def unwrap_file_keys(_state, _stanzas) do
     # TODO: Implement file key unwrapping
     {:ok, %{}}
   end

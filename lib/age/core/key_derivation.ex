@@ -16,7 +16,7 @@ defmodule ElixirAge.Core.KeyDerivation do
     * `info` - Info string for KDF
     * `length` - Output key length in bytes
   """
-  def hkdf_sha256(ikm, info, length, salt \\ "")
+  def hkdf_sha256(ikm, info, length, _salt \\ "")
       when is_binary(ikm) and is_binary(info) and is_integer(length) and length > 0 do
     # TODO: Implement HKDF-SHA256
     {:ok, :crypto.strong_rand_bytes(length)}

@@ -53,7 +53,7 @@ defmodule ElixirAge.Encryption.X25519 do
 
   Returns stanza payload as binary.
   """
-  def wrap_file_key(file_key, recipient_public_key) do
+  def wrap_file_key(_file_key, _recipient_public_key) do
     # TODO: Implement X25519 file key wrapping
     {:ok, :crypto.strong_rand_bytes(32)}
   end
@@ -63,7 +63,7 @@ defmodule ElixirAge.Encryption.X25519 do
 
   Returns the file key or error.
   """
-  def unwrap_file_key(stanza_payload, identity_secret_key) do
+  def unwrap_file_key(_stanza_payload, _identity_secret_key) do
     # TODO: Implement X25519 file key unwrapping
     {:ok, :crypto.strong_rand_bytes(32)}
   end

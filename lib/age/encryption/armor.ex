@@ -10,43 +10,58 @@ defmodule ElixirAge.Encryption.Armor do
 
   @doc """
   Encode binary age file to PEM armor format.
+
+  Returns `{:ok, armored_string}` or `{:error, reason}`.
   """
   def encode(binary) when is_binary(binary) do
-    b64 = Base.encode64(binary, padding: true)
+    try do
+      b64 = Base.encode64(binary)
 
-    wrapped =
-      b64
-      |> String.to_charlist()
-      |> Enum.chunk_every(64)
-      |> Enum.map(&List.to_string/1)
-      |> Enum.join("\n")
+      wrapped =
+        b64
+        |> String.to_charlist()
+        |> Enum.chunk_every(64)
+        |> Enum.map(&List.to_string/1)
+        |> Enum.join("\n")
 
-    "#{@pem_begin}\n#{wrapped}\n#{@pem_end}\n"
+      armored = "#{@pem_begin}\n#{wrapped}\n#{@pem_end}\n"
+      {:ok, armored}
+    rescue
+      e ->
+        {:error, "armor_encoding_failed: #{inspect(e)}"}
+    end
   end
 
   @doc """
   Decode PEM armor format to binary age file.
+
+  Returns `{:ok, binary}` or `{:error, reason}`.
   """
   def decode(pem_str) when is_binary(pem_str) do
-    lines = String.split(pem_str, "\n")
+    try do
+      lines = String.split(pem_str, "\n")
 
-    case lines do
-      [@pem_begin | rest] ->
-        # Remove the end marker line
-        rest =
-          rest
-          |> Enum.reject(&(&1 == @pem_end))
-          |> Enum.reject(&(&1 == ""))
+      case lines do
+        [@pem_begin | rest] ->
+          # Remove the end marker line and empty lines
+          rest =
+            rest
+            |> Enum.reject(&(&1 == @pem_end))
+            |> Enum.reject(&(&1 == ""))
 
-        b64 = Enum.join(rest, "")
+          b64 = Enum.join(rest, "")
 
-        case Base.decode64(b64, padding: true) do
-          {:ok, binary} -> {:ok, binary}
-          :error -> {:error, "invalid_base64_in_armor"}
-        end
+          case Base.decode64(b64) do
+            {:ok, binary} -> {:ok, binary}
+            :error -> {:error, "invalid_base64_in_armor"}
+          end
 
-      _ ->
-        {:error, "invalid_pem_format"}
+        _ ->
+          {:error, "invalid_pem_format"}
+      end
+    rescue
+      e ->
+        {:error, "armor_decoding_failed: #{inspect(e)}"}
     end
   end
 end
