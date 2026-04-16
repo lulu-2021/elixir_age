@@ -18,7 +18,7 @@ defmodule ElixirAge.Identity.Passphrase do
 
   Returns a stanza that can be used to encrypt the file key.
   """
-  def wrap(file_key, passphrase, opts \ []) do
+  def wrap(file_key, passphrase, opts \\ []) do
     log_n = Keyword.get(opts, :log_n, @default_log_n)
     r = Keyword.get(opts, :r, @default_r)
     p = Keyword.get(opts, :p, @default_p)
@@ -31,7 +31,7 @@ defmodule ElixirAge.Identity.Passphrase do
   @doc """
   Unwrap a file key from a passphrase stanza.
   """
-  def unwrap(stanza, passphrase, opts \ []) do
+  def unwrap(stanza, passphrase, opts \\ []) do
     # TODO: Implement passphrase unwrapping
     {:ok, :crypto.strong_rand_bytes(32)}
   end

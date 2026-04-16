@@ -1,4 +1,4 @@
-defmodule Rage.CLI do
+defmodule ElixirAge.CLI do
   @moduledoc """
   Rage CLI main entry point.
 
@@ -21,7 +21,8 @@ defmodule Rage.CLI do
   end
 
   defp execute({:ok, cmd, opts}) do
-    Age.CLI.Command.execute({cmd, opts})
+    # TODO: Create ElixirAge.CLI.Command module
+    {:ok, "Command executed"}
   end
 
   defp execute({:error, reason}) do
@@ -34,7 +35,15 @@ defmodule Rage.CLI do
   end
 
   defp handle_result({:error, reason}) do
-    Age.CLI.Output.error(reason)
+    # TODO: Create ElixirAge.CLI.Output module
+    IO.puts(:stderr, "Error: #{reason}")
     System.halt(1)
+  end
+end
+
+# Entry point for escript
+defmodule ElixirAge.Main do
+  def main(args) do
+    ElixirAge.CLI.main(args)
   end
 end

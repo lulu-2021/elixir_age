@@ -16,7 +16,7 @@ defmodule ElixirAge.Core.KeyDerivation do
     * `info` - Info string for KDF
     * `length` - Output key length in bytes
   """
-  def hkdf_sha256(ikm, salt \ "", info, length) do
+  def hkdf_sha256(ikm, salt \\ "", info, length) do
     # TODO: Implement HKDF-SHA256
     {:ok, :crypto.strong_rand_bytes(length)}
   end
@@ -40,7 +40,7 @@ defmodule ElixirAge.Core.KeyDerivation do
   @doc """
   Generate a random salt.
   """
-  def random_salt(length \ 16) do
+  def random_salt(length \\ 16) do
     :crypto.strong_rand_bytes(length)
   end
 end

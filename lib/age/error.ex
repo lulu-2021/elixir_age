@@ -5,7 +5,7 @@ defmodule ElixirAge.Error do
 
   @type t :: %__MODULE__{message: String.t(), type: atom()}
 
-  def new(message, type \ :encryption_error) do
+  def new(message, type \\ :encryption_error) do
     %__MODULE__{message: message, type: type}
   end
 end

@@ -9,8 +9,9 @@ defmodule ElixirAge do
   """
 
   alias ElixirAge.Core.Format
-  alias ElixirAge.Encryption.Chacha20
+  alias ElixirAge.Encryption.ChaCha20
   alias ElixirAge.Encryption.X25519
+  alias ElixirAge.Encryption.Armor
 
   @version 1
 
@@ -21,7 +22,7 @@ defmodule ElixirAge do
     * `:armor` - Enable PEM armor encoding (default: false)
     * `:passphrase` - Use passphrase encryption instead of recipients
   """
-  def encrypt(data, recipients, opts \ []) when is_binary(data) do
+  def encrypt(data, recipients, opts \\ []) when is_binary(data) do
     case Keyword.get(opts, :passphrase) do
       nil -> encrypt_with_recipients(data, recipients, opts)
       passphrase -> encrypt_with_passphrase(data, passphrase, opts)
@@ -34,14 +35,16 @@ defmodule ElixirAge do
   ## Options
     * `:max_work_factor` - Maximum work factor for passphrase decryption (default: 18)
   """
-  def decrypt(data, identity \ nil, opts \ []) when is_binary(data) do
+  def decrypt(data, identity \\ nil, opts \\ []) when is_binary(data) do
     case Format.parse(data) do
       {:ok, format} ->
         case identity do
           nil -> decrypt_with_passphrase(format, opts)
           identity -> decrypt_with_identity(format, identity, opts)
         end
-      {:error, reason} -> {:error, reason}
+
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 
@@ -73,11 +76,11 @@ defmodule ElixirAge do
   defp encrypt_with_recipients(data, recipients, opts) do
     with {:ok, file_key} <- generate_file_key(),
          {:ok, stanzas} <- wrap_for_recipients(file_key, recipients),
-         {:ok, payload} <- Chacha20.encrypt(data, file_key),
+         {:ok, payload} <- ChaCha20.encrypt(data, file_key),
          header <- Format.encode_header(@version, stanzas),
          encrypted <- header <> payload do
       case Keyword.get(opts, :armor, false) do
-        true -> {:ok, Age.Encryption.Armor.encode(encrypted)}
+        true -> {:ok, Armor.encode(encrypted)}
         false -> {:ok, encrypted}
       end
     end
@@ -86,11 +89,11 @@ defmodule ElixirAge do
   defp encrypt_with_passphrase(data, passphrase, opts) do
     with {:ok, file_key} <- generate_file_key(),
          {:ok, stanza} <- wrap_for_passphrase(file_key, passphrase),
-         {:ok, payload} <- Chacha20.encrypt(data, file_key),
+         {:ok, payload} <- ChaCha20.encrypt(data, file_key),
          header <- Format.encode_header(@version, [stanza]),
          encrypted <- header <> payload do
       case Keyword.get(opts, :armor, false) do
-        true -> {:ok, Age.Encryption.Armor.encode(encrypted)}
+        true -> {:ok, Armor.encode(encrypted)}
         false -> {:ok, encrypted}
       end
     end

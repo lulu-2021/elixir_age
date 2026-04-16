@@ -23,7 +23,7 @@ defmodule ElixirAge.Plugin.Supervisor do
   @doc """
   Start a plugin process.
   """
-  def start_plugin(name, opts \ []) do
+  def start_plugin(name, opts \\ []) do
     # TODO: Implement plugin process spawning
     {:ok, :not_implemented}
   end

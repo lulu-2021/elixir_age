@@ -15,12 +15,13 @@ defmodule ElixirAge.Encryption.Chacha20 do
 
   Returns `{:ok, ciphertext}` or `{:error, reason}`.
   """
-  def encrypt(plaintext, key, aad \ "") when is_binary(plaintext) and byte_size(key) == 32 do
+  def encrypt(plaintext, key, aad \\ "") when is_binary(plaintext) and byte_size(key) == 32 do
     nonce = :crypto.strong_rand_bytes(12)
 
     case :crypto.crypto_one_time_aead(:chacha20_poly1305, key, nonce, plaintext, aad, true) do
       ciphertext when is_binary(ciphertext) ->
         {:ok, nonce <> ciphertext}
+
       error ->
         {:error, error}
     end
@@ -36,17 +37,26 @@ defmodule ElixirAge.Encryption.Chacha20 do
 
   Returns `{:ok, plaintext}` or `{:error, reason}`.
   """
-  def decrypt(ciphertext, key, aad \ "") when is_binary(ciphertext) and byte_size(key) == 32 do
+  def decrypt(ciphertext, key, aad \\ "") when is_binary(ciphertext) and byte_size(key) == 32 do
     nonce_size = 12
 
     case ciphertext do
       <<nonce::binary-size(nonce_size), cipher_and_tag::binary>> ->
-        case :crypto.crypto_one_time_aead(:chacha20_poly1305, key, nonce, cipher_and_tag, aad, false) do
+        case :crypto.crypto_one_time_aead(
+               :chacha20_poly1305,
+               key,
+               nonce,
+               cipher_and_tag,
+               aad,
+               false
+             ) do
           plaintext when is_binary(plaintext) ->
             {:ok, plaintext}
+
           error ->
             {:error, error}
         end
+
       _ ->
         {:error, "invalid_ciphertext_size"}
     end

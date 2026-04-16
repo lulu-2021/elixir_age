@@ -18,7 +18,7 @@ defmodule ElixirAge.Plugin.Wrapper do
   @doc """
   Launch a plugin binary.
   """
-  def launch(plugin_path, args \ []) when is_binary(plugin_path) do
+  def launch(plugin_path, args \\ []) when is_binary(plugin_path) do
     # TODO: Implement plugin binary launching
     {:ok, :not_implemented}
   end

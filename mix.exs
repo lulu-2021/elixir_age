@@ -33,9 +33,6 @@ defmodule ElixirAge.MixProject do
       # Encoding
       {:bech32, "~> 1.0"},
 
-      # CLI argument parsing
-      {:OptionParser, "~> 0.1"},
-
       # Development/Testing
       {:ex_doc, "~> 0.30", only: :dev},
       {:dialyxir, "~> 1.4", only: :dev, runtime: false},
