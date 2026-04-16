@@ -1,4 +1,4 @@
-defmodule ElixirAge.Encryption.Chacha20 do
+defmodule ElixirAge.Encryption.ChaCha20 do
   @moduledoc """
   ChaCha20-Poly1305 symmetric encryption.
 
@@ -18,12 +18,14 @@ defmodule ElixirAge.Encryption.Chacha20 do
   def encrypt(plaintext, key, aad \\ "") when is_binary(plaintext) and byte_size(key) == 32 do
     nonce = :crypto.strong_rand_bytes(12)
 
-    case :crypto.crypto_one_time_aead(:chacha20_poly1305, key, nonce, plaintext, aad, true) do
-      ciphertext when is_binary(ciphertext) ->
-        {:ok, nonce <> ciphertext}
+    try do
+      ciphertext =
+        :crypto.crypto_one_time_aead(:chacha20_poly1305, key, nonce, plaintext, aad, true)
 
-      error ->
-        {:error, error}
+      {:ok, nonce <> ciphertext}
+    rescue
+      e ->
+        {:error, "encryption_failed: #{inspect(e)}"}
     end
   end
 
@@ -42,19 +44,21 @@ defmodule ElixirAge.Encryption.Chacha20 do
 
     case ciphertext do
       <<nonce::binary-size(nonce_size), cipher_and_tag::binary>> ->
-        case :crypto.crypto_one_time_aead(
-               :chacha20_poly1305,
-               key,
-               nonce,
-               cipher_and_tag,
-               aad,
-               false
-             ) do
-          plaintext when is_binary(plaintext) ->
-            {:ok, plaintext}
+        try do
+          plaintext =
+            :crypto.crypto_one_time_aead(
+              :chacha20_poly1305,
+              key,
+              nonce,
+              cipher_and_tag,
+              aad,
+              false
+            )
 
-          error ->
-            {:error, error}
+          {:ok, plaintext}
+        rescue
+          e ->
+            {:error, "decryption_failed: #{inspect(e)}"}
         end
 
       _ ->

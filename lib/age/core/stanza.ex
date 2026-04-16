@@ -16,7 +16,8 @@ defmodule ElixirAge.Core.Stanza do
   @doc """
   Create a new recipient stanza.
   """
-  def new_recipient(type, args, payload) do
+  def new_recipient(type, args, payload)
+      when is_binary(type) and is_list(args) and is_binary(payload) do
     %__MODULE__{
       type: type,
       args: args,
@@ -29,7 +30,7 @@ defmodule ElixirAge.Core.Stanza do
   """
   def encode(%__MODULE__{} = stanza) do
     # TODO: Implement stanza encoding
-    ""
+    {:ok, ""}
   end
 
   @doc """
@@ -37,6 +38,6 @@ defmodule ElixirAge.Core.Stanza do
   """
   def decode(binary) when is_binary(binary) do
     # TODO: Implement stanza decoding
-    {:ok, %__MODULE__{}}
+    {:ok, %__MODULE__{type: "", args: [], payload: ""}}
   end
 end

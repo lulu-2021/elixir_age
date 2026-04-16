@@ -16,7 +16,8 @@ defmodule ElixirAge.Core.KeyDerivation do
     * `info` - Info string for KDF
     * `length` - Output key length in bytes
   """
-  def hkdf_sha256(ikm, salt \\ "", info, length) do
+  def hkdf_sha256(ikm, info, length, salt \\ "")
+      when is_binary(ikm) and is_binary(info) and is_integer(length) and length > 0 do
     # TODO: Implement HKDF-SHA256
     {:ok, :crypto.strong_rand_bytes(length)}
   end
@@ -32,7 +33,9 @@ defmodule ElixirAge.Core.KeyDerivation do
     * `p` - Parallelization parameter
     * `length` - Output key length in bytes
   """
-  def scrypt(password, salt, log_n, r, p, length) do
+  def scrypt(password, salt, log_n, r, p, length)
+      when is_binary(password) and is_binary(salt) and is_integer(log_n) and is_integer(r) and
+             is_integer(p) and is_integer(length) do
     # TODO: Implement scrypt key derivation
     {:ok, :crypto.strong_rand_bytes(length)}
   end
@@ -40,7 +43,7 @@ defmodule ElixirAge.Core.KeyDerivation do
   @doc """
   Generate a random salt.
   """
-  def random_salt(length \\ 16) do
+  def random_salt(length \\ 16) when is_integer(length) and length > 0 do
     :crypto.strong_rand_bytes(length)
   end
 end
