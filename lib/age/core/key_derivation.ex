@@ -16,17 +16,19 @@ defmodule ElixirAge.Core.KeyDerivation do
     * `length` - Output key length in bytes
     * `salt` - Salt (optional, defaults to empty)
   """
-  def hkdf_sha256(ikm, info, length, salt \ "")
+  def hkdf_sha256(ikm, info, length, salt \\ "")
       when is_binary(ikm) and is_binary(info) and is_integer(length) and length > 0 and
              is_binary(salt) do
     # RFC 5869 HKDF-SHA256 implementation
-    hash_len = 32  # SHA256 produces 32 bytes
+    # SHA256 produces 32 bytes
+    hash_len = 32
 
     # Extract phase: PRK = HMAC-Hash(salt, IKM)
     prk = :crypto.mac(:hmac, :sha256, salt, ikm)
 
     # Expand phase: compute T(1) | T(2) | T(3) | ...
     n = ceil(length / hash_len)
+
     expand_hkdf(prk, info, n, hash_len)
     |> binary_part(0, length)
     |> then(&{:ok, &1})
@@ -67,7 +69,7 @@ defmodule ElixirAge.Core.KeyDerivation do
   @doc """
   Generate a random salt.
   """
-  def random_salt(length \ 16) when is_integer(length) and length > 0 do
+  def random_salt(length \\ 16) when is_integer(length) and length > 0 do
     :crypto.strong_rand_bytes(length)
   end
 end

@@ -97,7 +97,7 @@ defmodule ElixirAge.Encryption.X25519 do
   @spec encode_secret_key(binary()) :: {:ok, String.t()} | {:error, term()}
   defp encode_secret_key(secret_bytes) when byte_size(secret_bytes) == 32 do
     try do
-      encoded = Bech32.encode("AGE-SECRET-KEY-", secret_bytes)
+      encoded = Bech32.encode("AGE-SECRET-KEY", secret_bytes)
       {:ok, encoded}
     rescue
       e ->

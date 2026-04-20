@@ -44,10 +44,6 @@ defmodule ElixirAge.Core.Format do
     end
   end
 
-  @doc """
-  Decode a recipient from age format.
-  Accepts Bech32-encoded "age1..." string and returns raw 32-byte key.
-  """
   def decode_recipient(encoded) when is_binary(encoded) do
     try do
       case Bech32.decode(encoded) do
@@ -70,9 +66,6 @@ defmodule ElixirAge.Core.Format do
     end
   end
 
-  @doc """
-  Encode a stanza for the age format.
-  """
   def encode_stanza(stanza) when is_map(stanza) do
     type = Map.get(stanza, :type, "")
     args = Map.get(stanza, :args, [])
