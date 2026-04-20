@@ -9,8 +9,13 @@ defmodule ElixirAge.Encryption.X25519Test do
 
       assert is_binary(pub)
       assert is_binary(sec)
-      assert byte_size(pub) == 32
-      assert byte_size(sec) == 32
+      # ✅ Check format
+      assert String.starts_with?(pub, "age1")
+      # ✅ Check format
+      assert String.starts_with?(sec, "AGE-SECRET-KEY")
+      # ✅ Bech32 encoded is longer
+      assert byte_size(pub) > 32
+      assert byte_size(sec) > 32
     end
 
     test "generates different keypairs each time" do

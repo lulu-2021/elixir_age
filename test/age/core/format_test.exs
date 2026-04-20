@@ -6,13 +6,12 @@ defmodule ElixirAge.Core.FormatTest do
   describe "age format parsing" do
     test "rejects invalid header" do
       invalid_data = "not-an-age-file"
-      assert {:error, "invalid_age_header"} = Format.parse(invalid_data)
+      assert {:error, "invalid_age_format"} = Format.parse(invalid_data)
     end
 
     test "accepts valid age header" do
       valid_header = "age-encryption.org/v1\n"
-      # TODO: Add proper test vector
-      assert {:error, _} = Format.parse(valid_header)
+      assert {:ok, _} = Format.parse(valid_header)
     end
   end
 

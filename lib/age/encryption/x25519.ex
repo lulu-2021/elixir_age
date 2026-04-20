@@ -38,13 +38,33 @@ defmodule ElixirAge.Encryption.X25519 do
   @doc """
   Derive the public key from a secret key.
   """
-  def public_key(secret_key) when is_binary(secret_key) and byte_size(secret_key) == 32 do
-    try do
-      public_bytes = compute_public_key(secret_key)
-      {:ok, public_bytes}
-    rescue
-      e ->
-        {:error, "Failed to derive public key: #{inspect(e)}"}
+  def public_key(secret_key) when is_binary(secret_key) do
+    # Handle both raw (32 bytes) and Bech32-encoded keys
+    secret_bytes =
+      case secret_key do
+        <<_::binary-size(32)>> ->
+          secret_key
+
+        _encoded ->
+          # Decode if it's Bech32 encoded
+          case Bech32.decode(secret_key) do
+            {:ok, "AGE-SECRET-KEY", data} -> data
+            _ -> {:error, "Invalid secret key format"}
+          end
+      end
+
+    case secret_bytes do
+      {:error, _} = err ->
+        err
+
+      _ ->
+        try do
+          {public_bytes, ^secret_bytes} = :crypto.generate_key(:ecdh, :x25519, secret_bytes)
+          {:ok, public_bytes}
+        rescue
+          e ->
+            {:error, "Failed to derive public key: #{inspect(e)}"}
+        end
     end
   end
 

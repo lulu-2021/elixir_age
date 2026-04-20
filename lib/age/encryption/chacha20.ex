@@ -19,10 +19,10 @@ defmodule ElixirAge.Encryption.ChaCha20 do
     nonce = :crypto.strong_rand_bytes(12)
 
     try do
-      ciphertext =
+      {ciphertext, tag} =
         :crypto.crypto_one_time_aead(:chacha20_poly1305, key, nonce, plaintext, aad, true)
 
-      {:ok, nonce <> ciphertext}
+      {:ok, nonce <> ciphertext <> tag}
     rescue
       e ->
         {:error, "encryption_failed: #{inspect(e)}"}
@@ -41,24 +41,36 @@ defmodule ElixirAge.Encryption.ChaCha20 do
   """
   def decrypt(ciphertext, key, aad \\ "") when is_binary(ciphertext) and byte_size(key) == 32 do
     nonce_size = 12
+    tag_size = 16
 
     case ciphertext do
-      <<nonce::binary-size(nonce_size), cipher_and_tag::binary>> ->
-        try do
-          plaintext =
-            :crypto.crypto_one_time_aead(
-              :chacha20_poly1305,
-              key,
-              nonce,
-              cipher_and_tag,
-              aad,
-              false
-            )
+      <<nonce::binary-size(nonce_size), rest::binary>> ->
+        cipher_len = byte_size(rest) - tag_size
 
-          {:ok, plaintext}
-        rescue
-          e ->
-            {:error, "decryption_failed: #{inspect(e)}"}
+        case rest do
+          <<cipher::binary-size(cipher_len), tag::binary-size(tag_size)>> ->
+            try do
+              plaintext =
+                :crypto.crypto_one_time_aead(
+                  :chacha20_poly1305,
+                  key,
+                  nonce,
+                  # ✅ Separate ciphertext
+                  cipher,
+                  aad,
+                  false,
+                  # ✅ Pass tag for verification
+                  tag
+                )
+
+              {:ok, plaintext}
+            rescue
+              e ->
+                {:error, "decryption_failed: #{inspect(e)}"}
+            end
+
+          _ ->
+            {:error, "invalid_ciphertext_size"}
         end
 
       _ ->

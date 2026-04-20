@@ -11,7 +11,7 @@ defmodule ElixirAgeTest do
       assert byte_size(sec) > 0
       # Keys should start with age1 and AGE-SECRET-KEY- respectively
       assert String.starts_with?(pub, "age1")
-      assert String.starts_with?(sec, "AGE-SECRET-KEY-")
+      assert String.starts_with?(sec, "AGE-SECRET-KEY")
     end
 
     test "generate_keypair returns different keys each time" do

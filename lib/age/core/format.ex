@@ -57,7 +57,7 @@ defmodule ElixirAge.Core.Format do
         {:ok, _hrp, _data} ->
           {:error, "Invalid recipient prefix"}
 
-        :error ->
+        {:error, _reason} ->
           {:error, "Invalid Bech32 encoding"}
       end
     rescue
