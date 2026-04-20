@@ -50,17 +50,17 @@ defmodule ElixirAge.Encryption.ChaCha20 do
         case rest do
           <<cipher::binary-size(cipher_len), tag::binary-size(tag_size)>> ->
             try do
+              # For decryption, pass tag as 5th argument, flag as 6th (false = decrypt)
               plaintext =
                 :crypto.crypto_one_time_aead(
                   :chacha20_poly1305,
                   key,
                   nonce,
-                  # ✅ Separate ciphertext
-                  cipher,
+                  # ✅ Combine ciphertext + tag for decryption
+                  cipher <> tag,
                   aad,
-                  false,
-                  # ✅ Pass tag for verification
-                  tag
+                  # ✅ false = decrypt mode
+                  false
                 )
 
               {:ok, plaintext}
